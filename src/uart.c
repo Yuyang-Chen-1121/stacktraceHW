@@ -17,6 +17,14 @@ void uart_send_string(char *str)
 		uart_send((char) str[i]);
 }
 
+char uart_get(void)
+{
+	if (readb(UART_LSR) & UART_LSR_DR)
+		return readb(UART_DAT);
+	else
+		return -1;
+}
+
 void putchar(char c)
 {
        if (c == '\n')
@@ -44,4 +52,8 @@ void uart_init(void)
 
 	/* 使能FIFO，清空FIFO，设置14字节threshold*/
 	writeb(0xc7, UART_FCR);
+	
+	//added codes below
+	/* 使能接收缓冲区满中断*/
+	writeb(0x1, UART_IER);
 }

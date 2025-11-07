@@ -1,5 +1,6 @@
 GNU ?= riscv64-linux-gnu
-COPS += -g -O0 -Wall -nostdlib -Iinclude -mcmodel=medany -mabi=lp64 -march=rv64imafdc -fno-PIE -fno-omit-frame-pointer -fno-inline -fno-optimize-sibling-calls -Wno-builtin-declaration-mismatch
+
+COPS += -g -O0 -Wall -nostdlib -Iinclude -mcmodel=medany -mabi=lp64 -march=rv64imafdc -fno-PIE -fno-omit-frame-pointer -Wno-builtin-declaration-mismatch
 
 ##############
 #  build benos
@@ -67,11 +68,9 @@ mysbi.bin: $(SBI_SRC_DIR)/sbi_linker.ld $(SBI_OBJ_FILES)
 #  run qemu
 ##############
 
-QEMU_FLAGS  += -nographic -machine virt -m 128M -serial mon:stdio
+QEMU_FLAGS  += -nographic -machine virt -m 128M -bios mysbi.bin  -device loader,file=benos.bin,addr=0x80200000 
 
 run:
-	qemu-system-riscv64 $(QEMU_FLAGS) -bios none -kernel benos.elf
+	qemu-system-riscv64 $(QEMU_FLAGS) -kernel benos.elf
 debug:
-	qemu-system-riscv64 $(QEMU_FLAGS) -bios none -kernel benos.elf -S -s
-
-
+	qemu-system-riscv64 $(QEMU_FLAGS) -kernel benos.elf -S -s

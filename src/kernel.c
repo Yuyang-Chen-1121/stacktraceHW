@@ -71,8 +71,19 @@ static void wait_key_and_trigger_exception(void)
 void kernel_main(void)
 {
     uart_init();
+    uart_send_string("===== BenOS Stacktrace Experiment =====\n");
     init_printk_done();
-    printk("===== BenOS Stacktrace Experiment =====\n");
+    printk("\nbegin uart getting\n");
+    int tempchar=-1;
+
+	while(tempchar!=52){
+        tempchar=uart_get();
+//        printk("\nget char: %c \n",tempchar);
+    }
+    printk("\nget char: %c \n",tempchar);
+
+
+    printk("\nbegin uart ended\n");
 
     int r = func_level1();
     printk("[kernel_main] func_level1 result = %d\n", r);

@@ -1,0 +1,185 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	//
+$(BUILD_DIR)/%_c.o	Makefile	/^$(BUILD_DIR)\/%_c.o: $(SRC_DIR)\/%.c$/;"	t	language:Make
+$(BUILD_DIR)/%_s.o	Makefile	/^$(BUILD_DIR)\/%_s.o: $(SRC_DIR)\/%.S$/;"	t	language:Make
+$(SBI_BUILD_DIR)/%_c.o	Makefile	/^$(SBI_BUILD_DIR)\/%_c.o: $(SBI_SRC_DIR)\/%.c$/;"	t	language:Make
+$(SBI_BUILD_DIR)/%_s.o	Makefile	/^$(SBI_BUILD_DIR)\/%_s.o: $(SBI_SRC_DIR)\/%.S$/;"	t	language:Make
+.bss	sbi/sbi_linker.ld	/^	.bss : { *(.bss*) } $/;"	S	language:LdScript
+.bss	src/linker.ld	/^	.bss : { *(.bss*) } $/;"	S	language:LdScript
+.data	src/linker.ld	/^	.data : { *(.data) }$/;"	S	language:LdScript
+.rodata	src/linker.ld	/^	.rodata : { *(.rodata) }$/;"	S	language:LdScript
+.text	src/linker.ld	/^	.text : { *(.text) }$/;"	S	language:LdScript
+.text.boot	src/linker.ld	/^	.text.boot : { *(.text.boot) }$/;"	S	language:LdScript
+ASM_FILES	Makefile	/^ASM_FILES = $(wildcard $(SRC_DIR)\/*.S)$/;"	m	language:Make
+BUILD_DIR	Makefile	/^BUILD_DIR = build_src$/;"	m	language:Make
+CMD_PREFIX	Makefile	/^	CMD_PREFIX := $(CMD_PREFIX_DEFAULT)$/;"	m	language:Make
+CMD_PREFIX	Makefile	/^	CMD_PREFIX :=$/;"	m	language:Make
+CMD_PREFIX_DEFAULT	Makefile	/^CMD_PREFIX_DEFAULT := @$/;"	m	language:Make
+CONFIG_LOG_BUF_SHIFT	src/printk.c	/^#define CONFIG_LOG_BUF_SHIFT /;"	d	language:C	file:
+CONSOLE_PRINT_BUFFER_SIZE	src/printk.c	/^#define CONSOLE_PRINT_BUFFER_SIZE /;"	d	language:C	file:
+C_FILES	Makefile	/^C_FILES = $(wildcard $(SRC_DIR)\/*.c)$/;"	m	language:Make
+DEP_FILES	Makefile	/^DEP_FILES = $(OBJ_FILES:%.o=%.d)$/;"	m	language:Make
+FW_JUMP_ADDR	sbi/sbi_main.c	/^#define FW_JUMP_ADDR /;"	d	language:C	file:
+GNU	Makefile	/^GNU ?= riscv64-linux-gnu$/;"	m	language:Make
+INSERT_FIELD	include/asm/csr.h	/^#define INSERT_FIELD(/;"	d	language:C++	signature:(val,which,fieldval)
+L2	src/asm_test.S	/^.L2:$/;"	l	language:Asm
+L2	src/early_printk.S	/^.L2:$/;"	l	language:Asm
+L3	src/asm_test.S	/^.L3:$/;"	l	language:Asm
+L4	src/asm_test.S	/^.L4:$/;"	l	language:Asm
+L5	src/asm_test.S	/^.L5:$/;"	l	language:Asm
+LEFT	src/printk.c	/^#define LEFT	/;"	d	language:C	file:
+LOG_BUF_LEN	src/printk.c	/^#define LOG_BUF_LEN /;"	d	language:C	file:
+MSTATUS_MPIE	include/asm/csr.h	/^#define MSTATUS_MPIE	/;"	d	language:C++
+MSTATUS_MPP	include/asm/csr.h	/^#define MSTATUS_MPP	/;"	d	language:C++
+MSTATUS_MPP_SHIFT	include/asm/csr.h	/^#define MSTATUS_MPP_SHIFT	/;"	d	language:C++
+OBJ_FILES	Makefile	/^OBJ_FILES = $(C_FILES:$(SRC_DIR)\/%.c=$(BUILD_DIR)\/%_c.o)$/;"	m	language:Make
+PLUS	src/printk.c	/^#define PLUS	/;"	d	language:C	file:
+PRINTK_STATUS_DOWN	src/printk.c	/^	PRINTK_STATUS_DOWN,$/;"	e	language:C	enum:printk_status	file:
+PRINTK_STATUS_READY	src/printk.c	/^	PRINTK_STATUS_READY,$/;"	e	language:C	enum:printk_status	file:
+PRV_M	include/asm/csr.h	/^#define PRV_M	/;"	d	language:C++
+PRV_S	include/asm/csr.h	/^#define PRV_S	/;"	d	language:C++
+PRV_U	include/asm/csr.h	/^#define PRV_U	/;"	d	language:C++
+SBI_ASM_FILES	Makefile	/^SBI_ASM_FILES = $(wildcard $(SBI_SRC_DIR)\/*.S)$/;"	m	language:Make
+SBI_BUILD_DIR	Makefile	/^SBI_BUILD_DIR = build_sbi$/;"	m	language:Make
+SBI_C_FILES	Makefile	/^SBI_C_FILES = $(wildcard $(SBI_SRC_DIR)\/*.c)$/;"	m	language:Make
+SBI_OBJ_FILES	Makefile	/^SBI_OBJ_FILES = $(SBI_C_FILES:$(SBI_SRC_DIR)\/%.c=$(SBI_BUILD_DIR)\/%_c.o)$/;"	m	language:Make
+SBI_SRC_DIR	Makefile	/^SBI_SRC_DIR = sbi$/;"	m	language:Make
+SIGN	src/printk.c	/^#define SIGN	/;"	d	language:C	file:
+SMALL	src/printk.c	/^#define SMALL	/;"	d	language:C	file:
+SPACE	src/printk.c	/^#define SPACE	/;"	d	language:C	file:
+SPECIAL	src/printk.c	/^#define SPECIAL	/;"	d	language:C	file:
+SRC_DIR	Makefile	/^SRC_DIR = src$/;"	m	language:Make
+UART	include/asm/uart.h	/^#define UART /;"	d	language:C++
+UART_DAT	include/asm/uart.h	/^#define UART_DAT /;"	d	language:C++
+UART_DEFAULT_BAUD	src/uart.c	/^#define UART_DEFAULT_BAUD /;"	d	language:C	file:
+UART_DLL	include/asm/uart.h	/^#define UART_DLL /;"	d	language:C++
+UART_DLM	include/asm/uart.h	/^#define UART_DLM /;"	d	language:C++
+UART_FCR	include/asm/uart.h	/^#define UART_FCR /;"	d	language:C++
+UART_IER	include/asm/uart.h	/^#define UART_IER /;"	d	language:C++
+UART_IIR	include/asm/uart.h	/^#define UART_IIR /;"	d	language:C++
+UART_LCR	include/asm/uart.h	/^#define UART_LCR /;"	d	language:C++
+UART_LSR	include/asm/uart.h	/^#define UART_LSR /;"	d	language:C++
+UART_LSR_BI	include/asm/uart.h	/^#define UART_LSR_BI	/;"	d	language:C++
+UART_LSR_DR	include/asm/uart.h	/^#define UART_LSR_DR	/;"	d	language:C++
+UART_LSR_EMPTY	include/asm/uart.h	/^#define UART_LSR_EMPTY /;"	d	language:C++
+UART_LSR_ERROR	include/asm/uart.h	/^#define UART_LSR_ERROR /;"	d	language:C++
+UART_LSR_FE	include/asm/uart.h	/^#define UART_LSR_FE	/;"	d	language:C++
+UART_LSR_OE	include/asm/uart.h	/^#define UART_LSR_OE	/;"	d	language:C++
+UART_LSR_PE	include/asm/uart.h	/^#define UART_LSR_PE	/;"	d	language:C++
+UART_LSR_TFE	include/asm/uart.h	/^#define UART_LSR_TFE	/;"	d	language:C++
+UART_MCR	include/asm/uart.h	/^#define UART_MCR /;"	d	language:C++
+UART_MSR	include/asm/uart.h	/^#define UART_MSR /;"	d	language:C++
+UART_SIZE	include/asm/uart.h	/^#define UART_SIZE /;"	d	language:C++
+ZEROPAD	src/printk.c	/^#define ZEROPAD	/;"	d	language:C	file:
+_ASM_RISCV_CSR_H	include/asm/csr.h	/^#define _ASM_RISCV_CSR_H$/;"	d	language:C++
+_BENOS_TYPE_H	include/type.h	/^#define _BENOS_TYPE_H$/;"	d	language:C++
+_MINI_UART_H	include/uart.h	/^#define	_MINI_UART_H$/;"	d	language:C++
+_PRINTK_H	include/printk.h	/^#define	_PRINTK_H$/;"	d	language:C++
+_P_BASE_H	include/io.h	/^#define _P_BASE_H$/;"	d	language:C++
+_STRING_H	include/string.h	/^#define	_STRING_H$/;"	d	language:C++
+_UART_H	include/asm/uart.h	/^#define	_UART_H$/;"	d	language:C++
+__arch_getb	include/io.h	/^#define __arch_getb(/;"	d	language:C++	signature:(a)
+__arch_getl	include/io.h	/^#define __arch_getl(/;"	d	language:C++	signature:(a)
+__arch_putb	include/io.h	/^#define __arch_putb(/;"	d	language:C++	signature:(v,a)
+__arch_putl	include/io.h	/^#define __arch_putl(/;"	d	language:C++	signature:(v,a)
+__init_uart	src/early_printk.S	/^__init_uart:$/;"	l	language:Asm
+__iormb	include/io.h	/^#define __iormb(/;"	d	language:C++	signature:()
+__iowmb	include/io.h	/^#define __iowmb(/;"	d	language:C++	signature:()
+__memset	src/memset.c	/^static void *__memset(char *s, int c, size_t count)$/;"	f	language:C	typeref:typename:void *	file:	signature:(char * s,int c,size_t count)
+__memset_16bytes_asm	src/memset.S	/^__memset_16bytes_asm:$/;"	l	language:Asm
+__memset_1bytes	src/memset.c	/^static void *__memset_1bytes(void *s, int c, size_t count)$/;"	f	language:C	typeref:typename:void *	file:	signature:(void * s,int c,size_t count)
+_etext	src/linker.ld	/^	_etext = .;$/;"	s	language:LdScript
+_start	sbi/sbi_boot.S	/^_start:$/;"	l	language:Asm
+_start	src/boot.S	/^_start:$/;"	l	language:Asm
+_text	src/linker.ld	/^	_text = .;$/;"	s	language:LdScript
+add_sub_test	src/asm_test.S	/^add_sub_test:$/;"	l	language:Asm
+add_test	src/asm_test.S	/^add_test:$/;"	l	language:Asm
+all	Makefile	/^all : benos.bin mysbi.bin$/;"	t	language:Make
+benos.bin	Makefile	/^benos.bin: $(SRC_DIR)\/linker.ld $(OBJ_FILES)$/;"	t	language:Make
+bl_test	src/asm_test.S	/^bl_test:$/;"	l	language:Asm
+boot_string	src/boot.S	/^boot_string:$/;"	l	language:Asm
+branch_test	src/asm_test.S	/^branch_test:$/;"	l	language:Asm
+bss_begin	sbi/sbi_linker.ld	/^	bss_begin = .;$/;"	s	language:LdScript
+bss_begin	src/linker.ld	/^	bss_begin = .;$/;"	s	language:LdScript
+bss_end	sbi/sbi_linker.ld	/^	bss_end = .;$/;"	s	language:LdScript
+bss_end	src/linker.ld	/^	bss_end = .;$/;"	s	language:LdScript
+clean	Makefile	/^clean :$/;"	t	language:Make
+compare_and_return	src/asm_test.S	/^compare_and_return:$/;"	l	language:Asm
+debug	Makefile	/^debug:$/;"	t	language:Make
+delay	include/io.h	/^static inline void delay(unsigned int n)$/;"	f	language:C++	typeref:typename:void	signature:(unsigned int n)
+dmb	include/io.h	/^#define dmb(/;"	d	language:C++	signature:()
+do_div	src/printk.c	/^#define do_div(/;"	d	language:C	file:	signature:(n,base)
+dump_stack	src/stacktrace.c	/^void dump_stack(void)$/;"	f	language:C	typeref:typename:void	signature:(void)
+func_addr	src/asm_test.S	/^func_addr:$/;"	l	language:Asm
+func_level1	src/kernel.c	/^static int func_level1(void)$/;"	f	language:C	typeref:typename:int	file:	signature:(void)
+func_level2	src/kernel.c	/^static int func_level2(int x, int y)$/;"	f	language:C	typeref:typename:int	file:	signature:(int x,int y)
+func_level3	src/kernel.c	/^static int func_level3(int a, int b, int c)$/;"	f	language:C	typeref:typename:int	file:	signature:(int a,int b,int c)
+func_num_syms	src/asm_test.S	/^func_num_syms:$/;"	l	language:Asm
+func_string	src/asm_test.S	/^func_string:$/;"	l	language:Asm
+g_printk_status	src/printk.c	/^static enum printk_status g_printk_status = PRINTK_STATUS_DOWN;$/;"	v	language:C	typeref:enum:printk_status	file:
+g_record	src/printk.c	/^static char *g_record = log_buf;$/;"	v	language:C	typeref:typename:char *	file:
+g_record_len	src/printk.c	/^static unsigned long g_record_len;$/;"	v	language:C	typeref:typename:unsigned long	file:
+init_printk_done	src/printk.c	/^void init_printk_done(void)$/;"	f	language:C	typeref:typename:void	signature:(void)
+is_digit	src/printk.c	/^#define is_digit(/;"	d	language:C	file:	signature:(c)
+kernel_main	src/kernel.c	/^void kernel_main(void)$/;"	f	language:C	typeref:typename:void	signature:(void)
+kernel_text	src/stacktrace.c	/^static int kernel_text(unsigned long addr)$/;"	f	language:C	typeref:typename:int	file:	signature:(unsigned long addr)
+load_store_test	src/asm_test.S	/^load_store_test:$/;"	l	language:Asm
+log_buf	src/printk.c	/^static char log_buf[LOG_BUF_LEN];$/;"	v	language:C	typeref:typename:char[]	file:
+loop	src/asm_test.S	/^.loop:$/;"	l	language:Asm
+loop	src/early_printk.S	/^.loop:$/;"	l	language:Asm
+loop	src/memset.S	/^.loop:$/;"	l	language:Asm
+loop1	src/early_printk.S	/^.loop1:$/;"	l	language:Asm
+macro_test_1	src/asm_test.S	/^macro_test_1:$/;"	l	language:Asm
+macro_test_2	src/asm_test.S	/^macro_test_2:$/;"	l	language:Asm
+memcpy	src/string.c	/^void *memcpy(void *dest, const void *src, size_t count)$/;"	f	language:C	typeref:typename:void *	signature:(void * dest,const void * src,size_t count)
+memset	src/memset.c	/^void *memset(void *s, int c, size_t count)$/;"	f	language:C	typeref:typename:void *	signature:(void * s,int c,size_t count)
+my_memcpy_test	src/asm_test.S	/^my_memcpy_test:$/;"	l	language:Asm
+my_test_data	src/asm_test.S	/^my_test_data:$/;"	l	language:Asm
+myprintf	src/printk.c	/^int myprintf(char *string, unsigned int size,$/;"	f	language:C	typeref:typename:int	signature:(char * string,unsigned int size,const char * fmt,va_list arg)
+mysbi.bin	Makefile	/^mysbi.bin: $(SBI_SRC_DIR)\/sbi_linker.ld $(SBI_OBJ_FILES) $/;"	t	language:Make
+number	src/printk.c	/^static char *number(char *str, unsigned long num, int base, int size, int precision$/;"	f	language:C	typeref:typename:char *	file:	signature:(char * str,unsigned long num,int base,int size,int precision,int type)
+op_1	src/asm_test.S	/^op_1:$/;"	l	language:Asm
+op_2	src/asm_test.S	/^op_2:$/;"	l	language:Asm
+op_func	src/asm_test.S	/^.macro op_func op, a, b$/;"	m	language:Asm
+print_asm	src/boot.S	/^print_asm:$/;"	l	language:Asm
+print_buf	src/printk.c	/^static char print_buf[CONSOLE_PRINT_BUFFER_SIZE];$/;"	v	language:C	typeref:typename:char[]	file:
+printk	src/printk.c	/^int printk(const char *fmt, ...)$/;"	f	language:C	typeref:typename:int	signature:(const char * fmt,...)
+printk_status	src/printk.c	/^enum printk_status {$/;"	g	language:C	file:
+put_string_uart	src/early_printk.S	/^put_string_uart:$/;"	l	language:Asm
+put_uart	src/early_printk.S	/^put_uart:$/;"	l	language:Asm
+putchar	src/uart.c	/^void putchar(char c)$/;"	f	language:C	typeref:typename:void	signature:(char c)
+read_csr	include/asm/csr.h	/^#define read_csr(/;"	d	language:C++	signature:(csr)
+readb	include/io.h	/^#define readb(/;"	d	language:C++	signature:(c)
+readl	include/io.h	/^#define readl(/;"	d	language:C++	signature:(c)
+readl	include/io.h	/^static inline unsigned int readl(unsigned int addr)$/;"	f	language:C++	typeref:typename:unsigned int	signature:(unsigned int addr)
+run	Makefile	/^run:$/;"	t	language:Make
+s_fp	src/stacktrace.c	/^	unsigned long s_fp;$/;"	m	language:C	struct:stackframe	typeref:typename:unsigned long	file:
+s_ra	src/stacktrace.c	/^	unsigned long s_ra;$/;"	m	language:C	struct:stackframe	typeref:typename:unsigned long	file:
+sbi_main	sbi/sbi_main.c	/^void sbi_main(void)$/;"	f	language:C	typeref:typename:void	signature:(void)
+scan_number	src/printk.c	/^static const char *scan_number(const char *string, int *number)$/;"	f	language:C	typeref:typename:const char *	file:	signature:(const char * string,int * number)
+sel_test	src/asm_test.S	/^sel_test:$/;"	l	language:Asm
+shift_test	src/asm_test.S	/^shift_test:$/;"	l	language:Asm
+size_t	include/type.h	/^typedef unsigned int size_t;$/;"	t	language:C++	typeref:typename:unsigned int
+size_t	src/string.c	/^typedef unsigned int size_t;$/;"	t	language:C	typeref:typename:unsigned int	file:
+stackframe	src/stacktrace.c	/^struct stackframe {$/;"	s	language:C	file:
+stacks_start	sbi/sbi_boot.S	/^stacks_start:$/;"	l	language:Asm
+stacks_start	src/boot.S	/^stacks_start:$/;"	l	language:Asm
+stacktraceHW	README.md	/^# stacktraceHW$/;"	c	language:Markdown
+strlen	src/string.c	/^size_t strlen(const char *s)$/;"	f	language:C	typeref:typename:size_t	signature:(const char * s)
+uart16550_clock	src/uart.c	/^static unsigned int uart16550_clock = 1843200;   \/\/ a common base clock$/;"	v	language:C	typeref:typename:unsigned int	file:
+uart_get	src/uart.c	/^char uart_get(void)$/;"	f	language:C	typeref:typename:char	signature:(void)
+uart_getc	src/kernel.c	/^static inline int uart_getc(void)$/;"	f	language:C	typeref:typename:int	file:	signature:(void)
+uart_init	src/uart.c	/^void uart_init(void)$/;"	f	language:C	typeref:typename:void	signature:(void)
+uart_send	src/uart.c	/^void uart_send(char c)$/;"	f	language:C	typeref:typename:void	signature:(char c)
+uart_send_string	src/uart.c	/^void uart_send_string(char *str)$/;"	f	language:C	typeref:typename:void	signature:(char * str)
+wait_key_and_trigger_exception	src/kernel.c	/^static void wait_key_and_trigger_exception(void)$/;"	f	language:C	typeref:typename:void	file:	signature:(void)
+walk_stackframe	src/stacktrace.c	/^static void walk_stackframe(void )$/;"	f	language:C	typeref:typename:void	file:	signature:(void)
+write_csr	include/asm/csr.h	/^#define write_csr(/;"	d	language:C++	signature:(csr,val)
+writeb	include/io.h	/^#define writeb(/;"	d	language:C++	signature:(v,c)
+writel	include/io.h	/^#define writel(/;"	d	language:C++	signature:(v,c)
+writel	include/io.h	/^static inline void writel(unsigned int value, unsigned int addr)$/;"	f	language:C++	typeref:typename:void	signature:(unsigned int value,unsigned int addr)
