@@ -17,19 +17,19 @@ void uart_send_string(char *str)
 		uart_send((char) str[i]);
 }
 
+void putchar(char c)
+{
+       if (c == '\n')
+               uart_send('\r');
+       uart_send(c);
+}
+
 char uart_get(void)
 {
 	if (readb(UART_LSR) & UART_LSR_DR)
 		return readb(UART_DAT);
 	else
 		return -1;
-}
-
-void putchar(char c)
-{
-       if (c == '\n')
-               uart_send('\r');
-       uart_send(c);
 }
 
 static unsigned int uart16550_clock = 1843200;   // a common base clock

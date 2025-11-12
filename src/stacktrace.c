@@ -47,7 +47,8 @@ static void walk_stackframe(void )
 		pc = frame->s_ra - 4;
 
 		if (kernel_text(pc))
-			printk("[0x%016lx - 0x%016lx]  pc 0x%016lx\n", sp, fp, pc);
+			//printk("[0x%016lx - 0x%016lx]  pc 0x%016lx\n", sp, fp, pc);
+			printk("[0x%016lx - 0x%016lx]  size 0x%04lx  pc 0x%016lx\n", sp, fp, fp-sp , pc );
 	}
 }
 

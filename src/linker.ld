@@ -2,35 +2,46 @@ SECTIONS
 {
 	/*
         * 设置benos的加载入口地址为0x80200000
-        *
-        * 这里“.”表示location counter，当前位置
         */
 	. = 0x80200000,
 
 	/*
-        * 这里是第一个段text.boot，起始地址就是0x80200000
+        * 这里是第一个段text.boot
 	* 这个段存放了benos的第一条指令
         */
-	_text.boot = .;
+	_text_boot = .;
 	.text.boot : { *(.text.boot) }
+	_etext_boot = .;
 
 	/*
         * text代码段
         */
 	. = ALIGN(8);
 	_text = .;
-	.text : { *(.text) }
+	_stext = .;
+	.text :
+       {
+               *(.text)
+       }
+	. = ALIGN(8);
 	_etext = .;
 
 	/*
         * 只读数据段
         */
-	.rodata : { *(.rodata) }
+	_rodata = .;
+       .rodata : AT(ADDR(.rodata))
+       {
+               *(.rodata)
+       }
+       _erodata = .;
 
 	/*
         * 数据段
         */
+	_data = .;
 	.data : { *(.data) }
+	_edata = .;
 
 	/*
         * bss段
@@ -39,8 +50,8 @@ SECTIONS
         * bss_begin的起始地址以8字节对齐
         */
 	. = ALIGN(0x8);
-	bss_begin = .;
+	_bss = .;
 	.bss : { *(.bss*) } 
-	bss_end = .;
+	_ebss = .;
 }
 

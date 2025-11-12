@@ -1,18 +1,8 @@
+
+OUTPUT_ARCH(riscv)
+ENTRY(_start)
+
 SECTIONS
 {
-	 /*
-	  * 设置sbi的加载入口地址为0x80000000
-	  */
-
-	. = 0x80000000,
-
-	.text : { *(.text.boot) }
-	.text : { *(.text) }
-	.rodata : { *(.rodata) }
-	.data : { *(.data) }
-	. = ALIGN(0x8);
-	bss_begin = .;
-	.bss : { *(.bss*) } 
-	bss_end = .;
+	INCLUDE "sbi/sbi_base.ld"
 }
-

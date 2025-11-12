@@ -7,4 +7,5 @@ void uart_send ( char c );
 void uart_send_string(char* str);
 void putchar(char c);
 char uart_get( void );//added func
+
 #endif  /*_MINI_UART_H */
