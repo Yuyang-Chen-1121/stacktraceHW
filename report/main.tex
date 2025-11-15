@@ -1,0 +1,461 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{adjustbox}
+% 中文支持
+\usepackage[UTF8]{ctex}
+
+% 页面与格式
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{courier}
+\usepackage{amsmath,amssymb}
+
+% 超链接颜色
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue
+}
+
+% 代码样式
+\lstdefinestyle{code}{
+  language=C,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{teal!70!black},
+  commentstyle=\color{gray!70!black}\itshape,
+  columns=fullflexible,
+  breaklines=true,
+  frame=single,
+  framerule=0.3pt,
+  tabsize=2,
+  numberstyle=\tiny\color{gray},
+  numbers=left,
+  xleftmargin=2em,
+  framexleftmargin=1.5em,
+  showstringspaces=false
+}
+\title{基于 RISC-V 的函数栈回溯与异常触发实验报告}
+\author{陈宇阳\\3220101054}
+\date{\today}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+\newpage
+\section{引言}
+
+本实验在 QEMU \texttt{virt} + OpenSBI 的 RISC\,-V 平台上实现：
+
+\begin{itemize}
+  \item 常规路径下的函数栈回溯；
+  \item 使用 SBI 控制台输出栈地址范围与大小；
+  \item 通过按键触发访问非法地址引发异常，并验证异常路径被触发。
+\end{itemize}
+
+由于 S 模式无法直接访问 M 模式外设，本文对异常现场输出的可行方式进行分析，并采用“trap 中写内存标志，安全上下文中打印”的折衷方案，既满足题目要求，又符合特权模式下的访问约束。
+
+\section{实验目标与题目要求}
+输出发生异常时的函数栈的调用过程：
+\begin{enumerate}[label*=（\roman*)]
+    \item 设计多级函数三层嵌套调用程序，在最内层函数调用时，实现栈回溯功能；
+    \item 根据栈回溯过程，使用 SBI 系统调用输出栈的地址范围和大小；
+    \item 通过按键，启动在程序中构造的异常，输出发生异常时的函数栈的调用过程。
+\end{enumerate}
+
+
+本报告将逐项说明如何在当前 RISC\,-V 实验框架下满足上述要求，并讨论实现过程中的工程约束。
+
+\section{实验环境与运行方式}
+
+\subsection{硬件与仿真环境}
+
+\begin{itemize}
+  \item 仿真平台：QEMU \texttt{riscv64} \texttt{virt} 虚拟开发板
+  \item 固件：OpenSBI v1.3，通过 \texttt{-kernel} 直接加载 S 模式内核
+  \item 工具链：\texttt{riscv64-unknown-elf-gcc}，GNU \texttt{make}
+  \item RISC-V OS: BenOS
+\end{itemize}
+
+\subsection{内核加载方式与运行命令}
+
+实验中内核镜像为 \texttt{benos.elf}，运行命令示例：
+
+\begin{lstlisting}[style=code]
+qemu-system-riscv64 -nographic -machine virt -m 128M \
+  -kernel benos.elf -no-reboot
+\end{lstlisting}
+
+该命令被写入Makefile，只需要运行make run即可。
+
+\section{系统设计与实现}
+
+\subsection{三层函数调用与最内层栈回溯}
+
+在 C 代码中设计如下三层函数调用：
+
+\begin{itemize}
+  \item \verb|func_level1()|：第一层函数，由 \verb|kernel_main()| 调用；
+  \item \verb|func_level2(int x, int y)|：第二层函数；
+  \item \verb|func_level3(int a, int b, int c)|：第三层函数（最内层），在其中调用 \verb|dump_stack()|。
+\end{itemize}
+
+\verb|dump_stack()| 负责遍历当前保存的栈帧（\verb|pt_regs| 或按约定保存的返回地址），打印每一帧的地址区间和返回地址 pc，从而实现栈回溯功能。运行时，串口输出类似如下信息：
+
+\begin{itemize}
+  \item 每一行给出栈帧的起止地址、大小和返回地址；
+  \item 从最内层 \verb|func_level3| 一直到 \verb|kernel_main|。
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{fig-normal-backtrace.png}
+  \caption{常规路径下三层调用的栈回溯输出}
+  \label{fig:normal-backtrace}
+\end{figure}
+
+\subsection{栈地址范围、fp/sp/pc 的关系与输出}
+
+为了满足题目第 (2) 条“根据栈回溯过程，使用 SBI 系统调用输出栈的地址范围和大小”，本实验不仅输出了栈区的整体边界，还结合 RISC\,-V 的函数调用约定，利用 \verb|fp|（frame pointer）、\verb|sp|（stack pointer）以及 \verb|pc|（program counter）构建了可解释的栈帧结构。
+
+\paragraph{(1) 栈区整体布局（静态边界）}  
+在链接脚本中预先定义了栈的高低地址：
+
+\begin{itemize}
+  \item \verb|__stack_top|：栈顶，高地址，函数调用前 \verb|sp| 的初始位置；
+  \item \verb|__stack_bottom|：栈底，低地址。
+\end{itemize}
+
+由于 RISC\,-V 栈空间遵循“向低地址增长”，整体栈大小为：
+\begin{center}
+\texttt{stack\_size = \_\_stack\_top - \_\_stack\_bottom}
+\end{center}
+
+\paragraph{(2) 运行时实时栈状态（与 sp 相关）}
+
+在执行 \verb|dump_stack()| 的位置读取当前 \verb|sp|：
+
+\begin{center}
+\texttt{stack\_used = \_\_stack\_top - sp}
+\end{center}
+
+该值反映了当前到达最内层函数（即进行栈回溯的位置）时，已经消耗的栈空间大小。
+
+\paragraph{(3) 栈帧结构（fp 与 pc 的作用）}
+
+RISC\,-V 基于 \texttt{fp}（即 \texttt{s0}) 形成链式栈帧结构。本实验遵循如下帧结构抽象：
+
+\begin{itemize}
+  \item \verb|fp| 指向当前栈帧的基址；
+  \item 栈帧中保存调用者的 \verb|fp|（上一帧基址）；
+  \item 栈帧中保存返回地址 \verb|ra|，对应回溯链上的每一个 \verb|pc|；
+  \item \verb|sp| 指向栈帧底部，用于局部变量与保存寄存器区域。
+\end{itemize}
+
+因此，一个栈帧的核心三元组为：
+\[
+(\texttt{fp},\; \texttt{sp},\; \texttt{pc})
+\]
+
+本实验在 \verb|dump_stack()| 中依次打印每一帧的：
+
+\begin{itemize}
+  \item 栈帧的起止地址（由 fp/sp 推导）；
+  \item 栈帧大小；
+  \item 该帧对应的返回地址 pc；
+\end{itemize}
+
+从而形成从最内层函数到外层函数的一条完整调用链。
+
+\paragraph{(4) 输出示例}
+
+实验中，相关信息通过 \verb|printk|（底层由 SBI 控制台驱动）打印，包含：
+
+\begin{itemize}
+  \item 栈整体范围：\verb|__stack_top| 与 \verb|__stack_bottom|;
+  \item 栈使用情况：\verb|sp| 以及 \verb|stack_used|;
+  \item 回溯链：每一层的 \texttt{fp}/\texttt{sp}/\texttt{pc} 信息。
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{fig-stack-range.png}
+  \caption{栈地址范围与 fp/sp/pc 回溯信息输出示例}
+  \label{fig:stack-range}
+\end{figure}
+
+
+\subsection{按键触发异常的设计}
+
+题目第 (3) 条要求“通过按键，启动在程序中构造的异常”。在本实验中：
+
+\begin{itemize}
+  \item 使用串口 UART 的输入字符作为“按键”；
+  \item 约定按键字符为 ASCII `'4'`（十进制 52）；
+  \item 在 \verb|kernel_main()| 中轮询串口，收到 `'4'` 后调用 \verb|test_fault()|。
+\end{itemize}
+
+\subsubsection{UART 读取函数}
+
+UART 读取函数示意如下：
+
+\begin{lstlisting}[style=code]
+char uart_get(void)
+{
+    if (readb(UART_LSR) & UART_LSR_DR)
+        return readb(UART_DAT);
+    else
+        return -1;
+}
+\end{lstlisting}
+
+其中：
+
+\begin{itemize}
+  \item \verb|UART_LSR| 为行状态寄存器地址，\verb|UART_LSR_DR| 为“数据准备好”标志；
+  \item \verb|UART_DAT| 为接收数据寄存器地址；
+  \item \verb|readb| 为按字节读取内存映射寄存器的内联函数。
+\end{itemize}
+
+在主循环中，简单地将返回值与 52 比较即可：
+
+\begin{lstlisting}[style=code]
+int tempchar = -1;
+while (tempchar != 52) {
+    tempchar = uart_get();
+}
+printk("[kernel_main] key '4' detected, trigger fault...\n");
+test_fault();
+\end{lstlisting}
+
+\subsubsection{异常触发函数 \texorpdfstring{\texttt{trigger\_load\_access\_fault}}{}}
+
+异常触发函数在汇编中实现，例如：
+
+\begin{lstlisting}[style=code]
+.global trigger_load_access_fault
+trigger_load_access_fault:
+    li a0, 0x70000000
+    ld a0, (a0)
+    ret
+\end{lstlisting}
+
+\verb|test_fault()| 在 C 中调用该函数，从而构造出 Load Access Fault 异常。
+
+\subsection{Trap 入口与异常路径分析}
+
+在异常发生时，CPU 从 S 模式跳入异常入口 \verb|do_exception_vector|，其汇编实现大致如下：
+
+\begin{lstlisting}[style=code]
+.align 2
+.global do_exception_vector
+do_exception_vector:
+    kernel_entry
+
+    csrw sscratch, x0
+
+    la   ra, ret_from_exception
+    mv   a0, sp          // a0 = pt_regs*
+    mv   a1, s4          // a1 = scause
+    tail do_exception
+
+ret_from_exception:
+restore_all:
+    kernel_exit
+    sret
+\end{lstlisting}
+
+在本实验实际运行中，由于：
+
+\begin{itemize}
+  \item S 模式无法在 trap 现场直接访问 UART 寄存器；
+  \item 在 trap 现场直接调用 \verb|printk| 容易破坏栈或依赖未建立的运行时环境；
+\end{itemize}
+
+因此最终采用了“\textbf{trap 只写内存标志，返回后在安全上下文中打印}”的策略来观测异常触发。也就是说，一旦进入 \verb|do_exception_vector| 或 \verb|do_exception|，就将 \verb|scause|、\verb|sepc| 等信息写入某个全局变量，随后由主代码或特定检查函数读出并用 \verb|printk| 打印，从而在终端上看到“异常已触发”的证据。
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{fig-trap-flag.png}
+  \caption{异常触发后标志与关键信息打印}
+  \label{fig:trap-flag}
+\end{figure}
+
+\section{实验结果}
+
+\subsection{三层函数调用与栈回溯}
+
+在正常执行路径下，\verb|kernel_main| 调用 \verb|func_level1|，经过 \verb|func_level2| 到达 \verb|func_level3|，后者调用 \verb|dump_stack| 输出多个栈帧信息。如图~\ref{fig:normal-backtrace} 所示。
+
+从输出可以看到：
+
+\begin{itemize}
+  \item 栈帧从最内层到最外层依次打印；
+  \item 返回地址 pc 与反汇编结果一致；
+  \item 栈帧大小与 \verb|pt_regs| 定义相符。
+\end{itemize}
+
+\subsection{栈范围与大小}
+
+如图~\ref{fig:stack-range} 所示，相关数值与链接脚本中配置的栈大小一致，说明栈范围计算正确。
+
+\subsection{按键触发异常与可观测输出}
+
+根据实验要求，按键用于触发一个在程序中显式构造的异常。本实验在 QEMU 终端中检测到输入字符 \verb|'4'| 后，内核执行 \verb|test_fault()|，随后调用
+\verb|trigger_load_access_fault|，该函数尝试从未映射地址
+\verb|0x70000000| 读取数据，从而在 S 模式下产生 \textbf{Load Access Fault}
+异常。
+
+由于在 trap 上下文中直接访问 UART 或调用 \verb|printk| 具有不可重入性，本实验采用“\textbf{trap 中记录异常信息 → 返回后安全打印}”的方式输出异常内容：异常入口在保存 \verb|pt_regs| 的同时，将
+\verb|scause|、\verb|sepc|、\verb|sbadaddr| 以及各通用寄存器的值写入内存结构；返回安全上下文后，统一由 \verb|do_exception()| 输出。
+
+当按下 \verb|4| 后，实验平台会在终端显示类似如下信息：
+
+\begin{itemize}
+  \item \textbf{scause} 指示异常类型（例如本实验中的 \verb|0x5| 表示 Load Access Fault）；
+  \item \textbf{sepc} 指向触发异常的指令地址；
+  \item \textbf{sbadaddr} 显示非法访问的地址 \verb|0x70000000|；
+  \item 其余寄存器（\verb|ra|、\verb|sp|、\verb|gp|、\verb|t0|、\verb|s0| 等）完整反映异常发生瞬间的 CPU 状态。
+\end{itemize}
+
+这样一来，异常触发路径（按键输入 → 触发非法访问 → trap 保存现场 → 安全上下文打印）完全可观测且容易调试。
+
+\section{分析与讨论}
+
+\subsection{特权级与外设访问约束}
+
+本实验中，QEMU \texttt{virt} 平台上 UART 外设通常由 OpenSBI 在 M 模式下托管。内核运行在 S 模式时：
+
+\begin{itemize}
+  \item 常规路径可以通过 SBI 控制台接口间接访问 UART；
+  \item 在 trap 现场直接访问 UART 寄存器（或调用复杂 C 函数）可能导致二次异常或静默失败。
+\end{itemize}
+
+因此，本报告最后采用的实现策略是：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 常规路径下使用 \verb|printk| 通过 SBI 输出栈回溯和栈范围信息；
+  \item 异常路径中不直接输出，而是写内存标志，由后续安全环境打印。
+\end{enumerate}
+
+\subsection{QEMU/OpenSBI 版本与加载方式的影响}
+
+在 Ubuntu 24.04 环境下，QEMU 版本较新，如果同时使用 \verb|-kernel benos.elf| 和 \verb|-device loader,file=benos.bin,addr=0x80200000| 可能造成镜像覆盖，导致 OpenSBI 在跳转 S 模式时执行损坏指令，出现 \verb|sbi_trap_error|。使用单一 \verb|-kernel benos.elf| 的方式可以避免这类问题。
+
+\subsection{异常类型与可恢复性}
+
+本实验选择的是 Load Access Fault（非法访存），一般视为不可恢复异常。若需要在异常后继续执行，可以考虑：
+
+\begin{itemize}
+  \item 使用非法指令异常（例如插入 \verb|.word 0xffffffff|）并在 trap 中调整 \verb|sepc| 跳过出错指令；
+  \item 或在 trap 中判断异常类型并选择性恢复，这超出了本次作业范围。
+\end{itemize}
+
+\section{结论}
+
+本文在 RISC\,-V 实验环境下完成了题目给出的三项要求：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 设计了三层嵌套函数，并在最内层函数调用 \verb|dump_stack|，实现了函数栈的回溯；
+  \item 结合栈回溯过程，利用链接脚本提供的栈区边界和当前 \verb|sp|，通过 SBI 控制台输出了栈的地址范围和大小；
+  \item 通过串口按键 `'4'` 触发程序中构造的 Load Access Fault 异常，并采用“trap 标志 + 安全上下文打印”的方式，在终端上观测到异常被触发的证据。
+\end{enumerate}
+
+同时，报告对 S/M 特权关系、外设访问限制以及 QEMU/OpenSBI 版本差异下的行为进行了分析，为后续进一步完善异常打印和恢复逻辑提供了参考。
+
+\section*{参考文献}
+\begin{itemize}
+  \item RISC-V Privileged Architectures, Version 1.12.
+  \item OpenSBI 官方文档与 QEMU RISC-V virt 平台说明。
+\end{itemize}
+
+\section*{附录 A：关键代码节选}
+
+\subsection*{A.1 kernel\_main 主流程（节选）}
+
+\begin{lstlisting}[style=code]
+void kernel_main(void)
+{
+    init_printk_done(sbi_putchar);
+    trap_init();
+    
+    int r = func_level1();
+    printk("[kernel_main] func_level1 result = %d\n", r);
+
+    int tempchar = -1;
+    while (tempchar != 52) {
+        tempchar = uart_get();
+    }
+    printk("[kernel_main] key '4' detected, trigger fault...\n");
+    test_fault();
+
+    while (1) { ; }
+}
+\end{lstlisting}
+
+\subsection*{A.2 三层调用与最内层回溯（节选）}
+
+\begin{lstlisting}[style=code]
+static int func_level3(int a, int b, int c)
+{
+    printk("[func_level3] a=%d b=%d c=%d\n", a, b, c);
+    dump_stack();
+    return a + b + c;
+}
+\end{lstlisting}
+
+\subsection*{A.3 UART 读取函数（节选）}
+
+\begin{lstlisting}[style=code]
+char uart_get(void)
+{
+    if (readb(UART_LSR) & UART_LSR_DR)
+        return readb(UART_DAT);
+    else
+        return -1;
+}
+\end{lstlisting}
+
+\subsection*{A.4 异常触发汇编函数（节选）}
+
+\begin{lstlisting}[style=code]
+.global trigger_load_access_fault
+trigger_load_access_fault:
+    li a0, 0x70000000
+    ld a0, (a0)
+    ret
+\end{lstlisting}
+
+\subsection*{A.5 Trap 入口汇编（节选）}
+
+\begin{lstlisting}[style=code]
+.align 2
+.global do_exception_vector
+do_exception_vector:
+    kernel_entry
+    csrw sscratch, x0
+    la   ra, ret_from_exception
+    mv   a0, sp         // a0 = pt_regs*
+    mv   a1, s4         // a1 = scause
+    tail do_exception
+
+ret_from_exception:
+restore_all:
+    kernel_exit
+    sret
+\end{lstlisting}
+
+\end{document}

@@ -1,9 +1,9 @@
-# 1 "sbi/uart.c"
-# 1 "/home/rlk/rlk/BIG/trial2/benos//"
-# 1 "<built-in>"
-# 1 "<command-line>"
+# 0 "sbi/uart.c"
+# 1 "/home/chen/Workspace/riscv/stacktraceHW//"
+# 0 "<built-in>"
+# 0 "<command-line>"
 # 1 "/usr/riscv64-linux-gnu/include/stdc-predef.h" 1 3
-# 1 "<command-line>" 2
+# 0 "<command-line>" 2
 # 1 "sbi/uart.c"
 # 1 "include/asm/uart.h" 1
 # 2 "sbi/uart.c" 2
@@ -39,13 +39,6 @@ void putchar(char c)
        uart_send(c);
 }
 
-char uart_get(void)
-{
- if (({ unsigned char __v = (*(volatile unsigned char *)((0x10000000 +0x05))); __asm__ __volatile__ ("" : : : "memory"); __v; }) & 0x01)
-  return ({ unsigned char __v = (*(volatile unsigned char *)((0x10000000 +0x00))); __asm__ __volatile__ ("" : : : "memory"); __v; });
- else
-  return -1;
-}
 
 static unsigned int uart16550_clock = 1843200;
 

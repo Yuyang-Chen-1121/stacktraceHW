@@ -102,15 +102,25 @@ benos_payload.bin: $(SBI_SRC_DIR)/sbi_linker_payload.ld $(SBI_OBJ_FILES) $(OBJ_F
 ##############
 #  run qemu
 ##############
+#ifeq ($(board), qemu)
+#QEMU_FLAGS  += -nographic -machine virt -m 128M 
+#QEMU_BIOS = -bios mysbi.bin  -device loader,file=benos.bin,addr=0x80200000 
+#run:
+#	qemu-system-riscv64 $(QEMU_FLAGS) $(QEMU_BIOS) -kernel benos.elf
+#debug:
+#	qemu-system-riscv64 $(QEMU_FLAGS) $(QEMU_BIOS) -kernel benos.elf -S -s
+#payload:
+#	qemu-system-riscv64 $(QEMU_FLAGS) -bios none -device loader,file=benos_payload.bin,addr=0x80000000
+
 ifeq ($(board), qemu)
 QEMU_FLAGS  += -nographic -machine virt -m 128M 
-QEMU_BIOS = -bios mysbi.bin  -device loader,file=benos.bin,addr=0x80200000 
 run:
-	qemu-system-riscv64 $(QEMU_FLAGS) $(QEMU_BIOS) -kernel benos.elf
+	qemu-system-riscv64 $(QEMU_FLAGS) -kernel benos.elf -no-reboot
 debug:
-	qemu-system-riscv64 $(QEMU_FLAGS) $(QEMU_BIOS) -kernel benos.elf -S -s
+	qemu-system-riscv64 $(QEMU_FLAGS) -kernel benos.elf -S -s
 payload:
 	qemu-system-riscv64 $(QEMU_FLAGS) -bios none -device loader,file=benos_payload.bin,addr=0x80000000
+
 
 else ifeq ($(board), nemu)
 run:

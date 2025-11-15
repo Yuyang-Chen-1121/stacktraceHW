@@ -24,13 +24,6 @@ void putchar(char c)
        uart_send(c);
 }
 
-char uart_get(void)
-{
-	if (readb(UART_LSR) & UART_LSR_DR)
-		return readb(UART_DAT);
-	else
-		return -1;
-}
 
 static unsigned int uart16550_clock = 1843200;   // a common base clock
 #define UART_DEFAULT_BAUD  115200

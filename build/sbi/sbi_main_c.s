@@ -1,8 +1,11 @@
 	.file	"sbi_main.c"
 	.option nopic
+	.attribute arch, "rv64i2p1_m2p0_a2p1_f2p2_d2p2_zicsr2p0"
+	.attribute unaligned_access, 0
+	.attribute stack_align, 16
 	.text
 .Ltext0:
-	.cfi_sections	.debug_frame
+	.file 0 "/home/chen/Workspace/riscv/stacktraceHW" "sbi/sbi_main.c"
 	.section	.rodata
 	.align	3
 .LC0:
@@ -145,218 +148,411 @@ sbi_main:
 .LFE0:
 	.size	sbi_main, .-sbi_main
 .Letext0:
+	.file 2 "include/uart.h"
+	.file 3 "include/printk.h"
+	.file 4 "sbi/sbi_trap.h"
 	.section	.debug_info,"",@progbits
 .Ldebug_info0:
-	.4byte	0x134
-	.2byte	0x4
-	.4byte	.Ldebug_abbrev0
-	.byte	0x8
+	.4byte	0x1ab
+	.2byte	0x5
 	.byte	0x1
+	.byte	0x8
+	.4byte	.Ldebug_abbrev0
+	.uleb128 0x9
+	.4byte	.LASF8
+	.byte	0x1d
 	.4byte	.LASF0
-	.byte	0xc
 	.4byte	.LASF1
-	.4byte	.LASF2
 	.8byte	.Ltext0
 	.8byte	.Letext0-.Ltext0
 	.4byte	.Ldebug_line0
-	.byte	0x2
+	.uleb128 0x4
 	.byte	0x8
 	.byte	0x7
-	.4byte	.LASF3
+	.4byte	.LASF2
+	.uleb128 0xa
+	.4byte	.LASF9
+	.byte	0x4
+	.byte	0x23
+	.byte	0x6
+	.4byte	0x43
+	.uleb128 0x5
+	.byte	0
+	.uleb128 0x6
+	.4byte	.LASF6
+	.byte	0x4
+	.byte	0x21
+	.uleb128 0xb
+	.4byte	.LASF10
 	.byte	0x3
+	.byte	0x6
+	.byte	0x5
+	.4byte	0x61
+	.4byte	0x61
+	.uleb128 0x3
+	.4byte	0x68
+	.uleb128 0x5
+	.byte	0
+	.uleb128 0xc
+	.byte	0x4
+	.byte	0x5
+	.string	"int"
+	.uleb128 0x7
+	.4byte	0x74
+	.uleb128 0x4
+	.byte	0x1
+	.byte	0x8
+	.4byte	.LASF3
+	.uleb128 0xd
+	.4byte	0x6d
+	.uleb128 0x8
 	.4byte	.LASF4
+	.byte	0x2
+	.byte	0x8
+	.4byte	0x8a
+	.uleb128 0x3
+	.4byte	0x6d
+	.byte	0
+	.uleb128 0x8
+	.4byte	.LASF5
+	.byte	0x3
+	.byte	0x4
+	.4byte	0x9b
+	.uleb128 0x3
+	.4byte	0x9b
+	.byte	0
+	.uleb128 0x7
+	.4byte	0xa0
+	.uleb128 0xe
+	.4byte	0xab
+	.uleb128 0x3
+	.4byte	0x6d
+	.byte	0
+	.uleb128 0x6
+	.4byte	.LASF7
+	.byte	0x2
+	.byte	0x4
+	.uleb128 0xf
+	.4byte	.LASF11
 	.byte	0x1
 	.byte	0x15
 	.byte	0x6
 	.8byte	.LFB0
 	.8byte	.LFE0-.LFB0
-	.byte	0x1
+	.uleb128 0x1
 	.byte	0x9c
-	.byte	0x4
+	.uleb128 0x1
 	.string	"val"
-	.byte	0x1
 	.byte	0x17
 	.byte	0x10
-	.4byte	0x2d
-	.byte	0x2
+	.4byte	0x2e
+	.uleb128 0x2
 	.byte	0x91
-	.byte	0x68
-	.byte	0x5
+	.sleb128 -24
+	.uleb128 0x2
 	.8byte	.LBB2
 	.8byte	.LBE2-.LBB2
-	.4byte	0x81
-	.byte	0x4
+	.4byte	0xfd
+	.uleb128 0x1
 	.string	"__v"
-	.byte	0x1
 	.byte	0x21
 	.byte	0x22
-	.4byte	0x2d
-	.byte	0x1
+	.4byte	0x2e
+	.uleb128 0x1
 	.byte	0x51
 	.byte	0
-	.byte	0x5
+	.uleb128 0x2
 	.8byte	.LBB3
 	.8byte	.LBE3-.LBB3
-	.4byte	0xa6
-	.byte	0x4
+	.4byte	0x121
+	.uleb128 0x1
 	.string	"__v"
-	.byte	0x1
 	.byte	0x24
 	.byte	0x13
-	.4byte	0x2d
-	.byte	0x2
+	.4byte	0x2e
+	.uleb128 0x2
 	.byte	0x91
-	.byte	0x60
+	.sleb128 -32
 	.byte	0
-	.byte	0x5
+	.uleb128 0x2
 	.8byte	.LBB4
 	.8byte	.LBE4-.LBB4
-	.4byte	0xcb
-	.byte	0x4
+	.4byte	0x145
+	.uleb128 0x1
 	.string	"__v"
-	.byte	0x1
 	.byte	0x29
 	.byte	0x13
-	.4byte	0x2d
-	.byte	0x2
+	.4byte	0x2e
+	.uleb128 0x2
 	.byte	0x91
-	.byte	0x58
+	.sleb128 -40
 	.byte	0
-	.byte	0x5
+	.uleb128 0x2
 	.8byte	.LBB5
 	.8byte	.LBE5-.LBB5
-	.4byte	0xf0
-	.byte	0x4
+	.4byte	0x169
+	.uleb128 0x1
 	.string	"__v"
-	.byte	0x1
 	.byte	0x2b
 	.byte	0x13
-	.4byte	0x2d
-	.byte	0x2
+	.4byte	0x2e
+	.uleb128 0x2
 	.byte	0x91
-	.byte	0x50
+	.sleb128 -48
 	.byte	0
-	.byte	0x5
+	.uleb128 0x2
 	.8byte	.LBB6
 	.8byte	.LBE6-.LBB6
-	.4byte	0x115
-	.byte	0x4
+	.4byte	0x18d
+	.uleb128 0x1
 	.string	"__v"
-	.byte	0x1
 	.byte	0x2d
 	.byte	0x13
-	.4byte	0x2d
-	.byte	0x2
+	.4byte	0x2e
+	.uleb128 0x2
 	.byte	0x91
-	.byte	0x48
+	.sleb128 -56
 	.byte	0
-	.byte	0x6
+	.uleb128 0x10
 	.8byte	.LBB7
 	.8byte	.LBE7-.LBB7
-	.byte	0x4
+	.uleb128 0x1
 	.string	"__v"
-	.byte	0x1
 	.byte	0x2f
 	.byte	0x13
-	.4byte	0x2d
-	.byte	0x2
+	.4byte	0x2e
+	.uleb128 0x2
 	.byte	0x91
-	.byte	0x40
+	.sleb128 -64
 	.byte	0
 	.byte	0
 	.byte	0
 	.section	.debug_abbrev,"",@progbits
 .Ldebug_abbrev0:
+	.uleb128 0x1
+	.uleb128 0x34
+	.byte	0
+	.uleb128 0x3
+	.uleb128 0x8
+	.uleb128 0x3a
+	.uleb128 0x21
+	.sleb128 1
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x39
+	.uleb128 0xb
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x2
+	.uleb128 0x18
+	.byte	0
+	.byte	0
+	.uleb128 0x2
+	.uleb128 0xb
 	.byte	0x1
-	.byte	0x11
+	.uleb128 0x11
+	.uleb128 0x1
+	.uleb128 0x12
+	.uleb128 0x7
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x3
+	.uleb128 0x5
+	.byte	0
+	.uleb128 0x49
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x4
+	.uleb128 0x24
+	.byte	0
+	.uleb128 0xb
+	.uleb128 0xb
+	.uleb128 0x3e
+	.uleb128 0xb
+	.uleb128 0x3
+	.uleb128 0xe
+	.byte	0
+	.byte	0
+	.uleb128 0x5
+	.uleb128 0x18
+	.byte	0
+	.byte	0
+	.byte	0
+	.uleb128 0x6
+	.uleb128 0x2e
+	.byte	0
+	.uleb128 0x3f
+	.uleb128 0x19
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x39
+	.uleb128 0x21
+	.sleb128 6
+	.uleb128 0x27
+	.uleb128 0x19
+	.uleb128 0x3c
+	.uleb128 0x19
+	.byte	0
+	.byte	0
+	.uleb128 0x7
+	.uleb128 0xf
+	.byte	0
+	.uleb128 0xb
+	.uleb128 0x21
+	.sleb128 8
+	.uleb128 0x49
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x8
+	.uleb128 0x2e
 	.byte	0x1
-	.byte	0x25
-	.byte	0xe
-	.byte	0x13
-	.byte	0xb
-	.byte	0x3
-	.byte	0xe
-	.byte	0x1b
-	.byte	0xe
-	.byte	0x11
+	.uleb128 0x3f
+	.uleb128 0x19
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x39
+	.uleb128 0x21
+	.sleb128 6
+	.uleb128 0x27
+	.uleb128 0x19
+	.uleb128 0x3c
+	.uleb128 0x19
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x9
+	.uleb128 0x11
 	.byte	0x1
-	.byte	0x12
-	.byte	0x7
-	.byte	0x10
-	.byte	0x17
+	.uleb128 0x25
+	.uleb128 0xe
+	.uleb128 0x13
+	.uleb128 0xb
+	.uleb128 0x3
+	.uleb128 0x1f
+	.uleb128 0x1b
+	.uleb128 0x1f
+	.uleb128 0x11
+	.uleb128 0x1
+	.uleb128 0x12
+	.uleb128 0x7
+	.uleb128 0x10
+	.uleb128 0x17
 	.byte	0
 	.byte	0
-	.byte	0x2
-	.byte	0x24
-	.byte	0
-	.byte	0xb
-	.byte	0xb
-	.byte	0x3e
-	.byte	0xb
-	.byte	0x3
-	.byte	0xe
-	.byte	0
-	.byte	0
-	.byte	0x3
-	.byte	0x2e
+	.uleb128 0xa
+	.uleb128 0x2e
 	.byte	0x1
-	.byte	0x3f
-	.byte	0x19
-	.byte	0x3
-	.byte	0xe
-	.byte	0x3a
-	.byte	0xb
-	.byte	0x3b
-	.byte	0xb
-	.byte	0x39
-	.byte	0xb
-	.byte	0x27
-	.byte	0x19
-	.byte	0x11
+	.uleb128 0x3f
+	.uleb128 0x19
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x39
+	.uleb128 0xb
+	.uleb128 0x3c
+	.uleb128 0x19
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0xb
+	.uleb128 0x2e
 	.byte	0x1
-	.byte	0x12
-	.byte	0x7
-	.byte	0x40
-	.byte	0x18
-	.byte	0x96,0x42
-	.byte	0x19
+	.uleb128 0x3f
+	.uleb128 0x19
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x39
+	.uleb128 0xb
+	.uleb128 0x27
+	.uleb128 0x19
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x3c
+	.uleb128 0x19
+	.uleb128 0x1
+	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.byte	0x4
-	.byte	0x34
+	.uleb128 0xc
+	.uleb128 0x24
 	.byte	0
-	.byte	0x3
-	.byte	0x8
-	.byte	0x3a
-	.byte	0xb
-	.byte	0x3b
-	.byte	0xb
-	.byte	0x39
-	.byte	0xb
-	.byte	0x49
-	.byte	0x13
-	.byte	0x2
-	.byte	0x18
+	.uleb128 0xb
+	.uleb128 0xb
+	.uleb128 0x3e
+	.uleb128 0xb
+	.uleb128 0x3
+	.uleb128 0x8
 	.byte	0
 	.byte	0
-	.byte	0x5
-	.byte	0xb
+	.uleb128 0xd
+	.uleb128 0x26
+	.byte	0
+	.uleb128 0x49
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0xe
+	.uleb128 0x15
 	.byte	0x1
-	.byte	0x11
-	.byte	0x1
-	.byte	0x12
-	.byte	0x7
-	.byte	0x1
-	.byte	0x13
+	.uleb128 0x27
+	.uleb128 0x19
+	.uleb128 0x1
+	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.byte	0x6
-	.byte	0xb
+	.uleb128 0xf
+	.uleb128 0x2e
 	.byte	0x1
-	.byte	0x11
+	.uleb128 0x3f
+	.uleb128 0x19
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x39
+	.uleb128 0xb
+	.uleb128 0x27
+	.uleb128 0x19
+	.uleb128 0x11
+	.uleb128 0x1
+	.uleb128 0x12
+	.uleb128 0x7
+	.uleb128 0x40
+	.uleb128 0x18
+	.uleb128 0x7c
+	.uleb128 0x19
+	.byte	0
+	.byte	0
+	.uleb128 0x10
+	.uleb128 0xb
 	.byte	0x1
-	.byte	0x12
-	.byte	0x7
+	.uleb128 0x11
+	.uleb128 0x1
+	.uleb128 0x12
+	.uleb128 0x7
 	.byte	0
 	.byte	0
 	.byte	0
@@ -375,15 +571,30 @@ sbi_main:
 	.section	.debug_line,"",@progbits
 .Ldebug_line0:
 	.section	.debug_str,"MS",@progbits,1
-.LASF3:
-	.string	"long unsigned int"
 .LASF4:
-	.string	"sbi_main"
+	.string	"putchar"
 .LASF2:
-	.string	"/home/rlk/rlk/BIG/trial2/benos"
+	.string	"long unsigned int"
+.LASF5:
+	.string	"init_printk_done"
+.LASF9:
+	.string	"delegate_traps"
+.LASF7:
+	.string	"uart_init"
+.LASF3:
+	.string	"char"
+.LASF11:
+	.string	"sbi_main"
+.LASF8:
+	.string	"GNU C17 13.3.0 -mcmodel=medany -mabi=lp64 -misa-spec=20191213 -march=rv64imafd_zicsr -g -O0 -fno-PIE -fno-omit-frame-pointer"
+.LASF10:
+	.string	"printk"
+.LASF6:
+	.string	"sbi_trap_init"
+	.section	.debug_line_str,"MS",@progbits,1
 .LASF1:
-	.string	"sbi/sbi_main.c"
+	.string	"/home/chen/Workspace/riscv/stacktraceHW"
 .LASF0:
-	.string	"GNU C17 9.3.0 -mcmodel=medany -mabi=lp64 -march=rv64imafd -g -O0 -fno-PIE -fno-omit-frame-pointer"
-	.ident	"GCC: (Ubuntu 9.3.0-10ubuntu1) 9.3.0"
+	.string	"sbi/sbi_main.c"
+	.ident	"GCC: (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0"
 	.section	.note.GNU-stack,"",@progbits
